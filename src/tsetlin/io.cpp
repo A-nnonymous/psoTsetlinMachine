@@ -216,7 +216,7 @@ modelOutput (TsetlinMachine tm,
         clauseIdx++;
     }
     write_csv<int> (positive, bestPositiveClauses.size (), automataPerClause,
-                    "./positive");
+                    "./positive_" + std::to_string(precision));
     write_csv<int> (negative, bestNegativeClauses.size (), automataPerClause,
-                    "./negative");
+                    "./negative_" + std::to_string(precision));
 }

@@ -71,7 +71,7 @@ void Environment::exploration()
 }
 
 
-void Environment::optimize()
+targetArgs Environment::optimize()
 {
     int it = 0;
     while (it++ < _maxIter)
@@ -88,7 +88,7 @@ void Environment::optimize()
         {
             printBest();
             std::cout<<"Global optima converged, optimization completed."<<std::endl;
-            return;
+            return std::move(_gbPosition);
         }
         exploration();
         printBest();
@@ -96,6 +96,7 @@ void Environment::optimize()
     std::cout<<"\n\n****Max iteration time exceeded****"<<std::endl;
     std::cout<<"FINAL RESULT:"<<std::endl;
     printBest();
+    return std::move(_gbPosition);
 }
 
 

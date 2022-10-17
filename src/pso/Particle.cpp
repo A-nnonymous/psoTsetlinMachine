@@ -66,6 +66,4 @@ Particle::Particle(particleLimits limits, float omega, float egoFactor, float dt
         this->_evaluateJob = fun;
         this->_uniqueArgs = commonArgs;
         _uniqueArgs.s = distS(_rd);_uniqueArgs.T = distT(_rd);
-        std::cout<<"initialized particle arg.s = "<<_uniqueArgs.s<<", arg.T="<<_uniqueArgs.T
-        <<std::endl;
 }

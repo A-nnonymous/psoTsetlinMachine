@@ -23,7 +23,7 @@ private:
     void                    printBest();           // Return the best result if converge or off-iter.
 
 public:
-    void                    optimize();
+    targetArgs              optimize();
 
     Environment(int particleNum, int iterNum,
                 float egoFactor, float convThreshold, float omega, float dt,
