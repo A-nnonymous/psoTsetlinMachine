@@ -19,22 +19,21 @@ float testFun(evaluateJobArgs args)
     int                             output_size = 4;
     int                             input_size = input_bit_per_feature * input_features;
 
-    std::vector<std::vector<int>>   train_seqs(train_data_size, std::vector<int>(input_size, 0));
-    std::vector<std::vector<int>>   train_scores(train_data_size, std::vector(output_size, 0));
-    std::vector<std::vector<int>>   test_seqs(test_data_size, std::vector<int>(input_size, 0));
-    std::vector<std::vector<int>>   test_scores(test_data_size, std::vector(output_size, 0));
+    std::vector<std::vector<int>>   train_seqs(train_data_size,     std::vector<int>(input_size, 0));
     parse_huesken_seqs("/home/data/siRNA/e2s/e2s_training_seq.csv", train_seqs);
-    parse_huesken_scores("/home/data/siRNA/e2s/e2s_training_efficiency.csv", train_scores);
+    std::vector<std::vector<int>>   test_seqs(test_data_size,       std::vector<int>(input_size, 0));
     parse_huesken_seqs("/home/data/siRNA/e2s/e2s_test_seq.csv", test_seqs);
+    std::vector<std::vector<int>>   train_scores(train_data_size,   std::vector(output_size, 0));
+    parse_huesken_scores("/home/data/siRNA/e2s/e2s_training_efficiency.csv", train_scores);
+    std::vector<std::vector<int>>   test_scores(test_data_size,     std::vector(output_size, 0));
     parse_huesken_scores("/home/data/siRNA/e2s/e2s_test_efficiency.csv", test_scores);
-    
 
     float                           precision; 
     int                             trainset_correct, testset_correct;
     float                           best_test_accuracy = 0;
-    std::vector<std::vector<int>>   this_test(test_data_size, std::vector<int>(4,0));
-    std::vector<std::vector<int>>   best_test(test_data_size, std::vector<int>(4,0));
-    std::vector<int>                hardMaxedResult; hardMaxedResult.resize(4,0);
+    std::vector<int>                hardMaxedResult(output_size, 0);
+    std::vector<std::vector<int>>   this_test(test_data_size, std::vector<int>(output_size, 0));
+    std::vector<std::vector<int>>   best_test(test_data_size, std::vector<int>(output_size, 0));
 
     for (int epoch = 0; epoch < args.epoch_max; epoch++) {
 
@@ -42,14 +41,14 @@ float testFun(evaluateJobArgs args)
 
         for (int trainIdx = 0; trainIdx < train_data_size; trainIdx++)
         {
-            Prediction    train_predict = tm.predict(train_seqs[trainIdx]);
+            TsetlinMachine::Prediction    train_predict = tm.predict(train_seqs[trainIdx]);
             hardMaxedResult = hardMax(train_predict);
             if(hardMaxedResult == train_scores[trainIdx])trainset_correct++;
             tm.learn(train_scores[trainIdx]);
         }
         for(int testIdx = 0; testIdx < test_data_size; testIdx++)
         {
-            Prediction    test_predict = tm.predict(test_seqs[testIdx]);
+            TsetlinMachine::Prediction    test_predict = tm.predict(test_seqs[testIdx]);
             hardMaxedResult = hardMax(test_predict);
             this_test[testIdx] = hardMaxedResult;
             if(hardMaxedResult == test_scores[testIdx])testset_correct++;
@@ -71,24 +70,27 @@ int main(int argc, char const *argv[])
 {
     // Tsetlin Machine common arguments.
     int     inputBitNum = 84;
-    int     clausePerOutput = 1000;
+    int     clausePerOutput = 500;
     int     outputBitNum = 4;
-    int     epochNum = 100;
+    int     epochNum = 50;
     std::mt19937 rng(time(nullptr));
 
     // PSO algorithm particle limit arguments.
-    float   vTMax = 20.0f,  vsMax = 2.0f;
-    float   sMin = 2.0f,    sMax = 20.0f;
-    int     TMin = 200,     TMax = 2000;
+    float   sMin = 2.0f,    sMax = 40.0f;
+    int     TMin = 0.5 * clausePerOutput;   // For aggressive feedback.
+    int     TMax = 2.0 * clausePerOutput;   // For noise control.
     
     // PSO algorithm environment arguments.
     int             particleNum = 94;
     int             maxIter = 100;
-    int             threadNum = 94;
-    float           egoFactor = 1.0f;
+    float           egoFactor = 2.0f;       // C1 = egoFactor, C2 = 1/egoFactor.
     float           convThreshold = 0.002f;
-    float           omega = 0.8f;
-    float           dt = 0.01f;
+    float           omega = 0.9f;
+    float           dt = 0.001f;
+
+    float           expectedNoiseRatio = 2; // Expected worst condition to get to optima.
+    float           vTMax = (TMax - TMin) / (maxIter / expectedNoiseRatio);
+    float           vsMax = (TMax - TMin) / (maxIter / expectedNoiseRatio);
 
     particleLimits  argsLimit(   vTMax,  vsMax,
                             sMin,   sMax,
@@ -98,7 +100,7 @@ int main(int argc, char const *argv[])
                                     epochNum, rng   );
 
     // Constructing enviroment.
-    Environment testEnv(    particleNum, maxIter, threadNum,
+    Environment testEnv(    particleNum, maxIter,
                             egoFactor, convThreshold, omega, dt,
                             argsLimit,
                             testFun, testFunArgs);

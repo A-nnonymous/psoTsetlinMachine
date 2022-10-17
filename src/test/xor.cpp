@@ -50,9 +50,9 @@ int main() {
     clock_t start = clock();
     
     for (int e = 0; e < 1000; e++) {
-        std::vector<int>    in = inputs[e % 4];
-        Prediction    out = tm.predict(in);
-        bool                correct = false;
+        std::vector<int>                in = inputs[e % 4];
+        TsetlinMachine::Prediction      out = tm.predict(in);
+        bool                            correct = false;
 
         if (in[0] == in[1]) {
             if (out.digit[0] == 0 && out.digit[1] == 1)

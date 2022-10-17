@@ -23,9 +23,11 @@ SOFTWARE.
 */
 
 #include "TsetlinMachine.h"
+
 #include <iostream>
 
-const Prediction  &TsetlinMachine::predict(const std::vector<int> &inputStates) 
+const TsetlinMachine::Prediction &
+TsetlinMachine::predict(const std::vector<int> &inputStates) 
 {
     // A prediction (or says, forward propagation) of tsetlin machine.
     _inputStates = inputStates;
@@ -65,7 +67,8 @@ const Prediction  &TsetlinMachine::predict(const std::vector<int> &inputStates)
     return _results;   // return all output array bitwise.
 }
 
-void TsetlinMachine::inclusionUpdate(int outputIdx, int clauseIdx, int automataIdx) 
+void 
+TsetlinMachine::inclusionUpdate(int outputIdx, int clauseIdx, int automataIdx) 
 {
     bool isToInclude = _outputs[outputIdx]
                             ._clauses[clauseIdx]
@@ -87,7 +90,8 @@ void TsetlinMachine::inclusionUpdate(int outputIdx, int clauseIdx, int automataI
                                 ._inclusions.erase(automataIdx);
 }
 
-void TsetlinMachine::feedbackTypeI(int outputIdx, int clauseIdx)
+void 
+TsetlinMachine::feedbackTypeI(int outputIdx, int clauseIdx)
 {
     std::uniform_real_distribution<float> dist01(0.0f, 1.0f);
 
@@ -121,7 +125,7 @@ void TsetlinMachine::feedbackTypeI(int outputIdx, int clauseIdx)
                 }
             }
         }
-        else            // Bad match in this clause ,Prefer to exclude no matter whether literal.
+        else            // Bad match in this clause, Prefer to exclude no matter whether literal.
         {
             if (dist01(_rng) < _sInv) 
             {
@@ -134,7 +138,8 @@ void TsetlinMachine::feedbackTypeI(int outputIdx, int clauseIdx)
     }
 }
 
-void TsetlinMachine::feedbackTypeII(int outputIdx, int clauseIdx) 
+void 
+TsetlinMachine::feedbackTypeII(int outputIdx, int clauseIdx) 
 {
     int clauseState = _outputs[outputIdx]._clauses[clauseIdx]._state;
 
@@ -158,10 +163,11 @@ void TsetlinMachine::feedbackTypeII(int outputIdx, int clauseIdx)
     }
 }
 
-void TsetlinMachine::learn(const std::vector<int> &targetOutputStates)
+void 
+TsetlinMachine::learn(const std::vector<int> &targetOutputStates)
 {
-    std::uniform_real_distribution<float>   dist01(0.0f, 1.0f);
     int                                     T = this->_arg_T;
+    std::uniform_real_distribution<float>   dist01(0.0f, 1.0f);
     
     for (int outputIdx = 0; outputIdx < _outputSize; outputIdx++) 
     {
@@ -197,7 +203,68 @@ void TsetlinMachine::learn(const std::vector<int> &targetOutputStates)
         }
     }
 }
-std::vector<int> hardMax(Prediction p)
+
+void
+TsetlinMachine::getPositiveClauses(std::vector<TsetlinMachine::Clause> *result)
+{
+    (*result).clear();
+    for (int i = 0; i < _clauseNum; i++)
+    {
+        if(i%2 == 0)
+        {
+            (*result).push_back( _clauses[i]);
+        }
+    }
+    
+}
+
+void
+TsetlinMachine::getNegativeClauses(std::vector<TsetlinMachine::Clause> *result)
+{
+    (*result).clear();
+    for (int i = 0; i < _clauseNum; i++)
+    {
+        if(i%2 != 0)
+        {
+            (*result).push_back( _clauses[i]);
+        }
+    }
+}
+
+TsetlinMachine::TsetlinMachine(int numInputs, int clausesPerOutput, int numOutputs,
+                   float s, int T,std::mt19937 &rng):
+        _clausePerOutput(clausesPerOutput),
+        _clauseNum( numOutputs * clausesPerOutput),
+        _inputSize(numInputs),
+        _arg_s(s),
+        _sInv(1.0f / s),
+        _sInvConj(1.0f - _sInv),
+        _arg_T(T),
+        _rng(rng),
+        _outputSize(numOutputs)
+    {
+        _inputStates.resize(numInputs, 0); // Resize and initialize to zeros.
+        _clauses.resize(_clauseNum);
+        _outputs.resize(numOutputs);
+        _results.digit.resize(numOutputs, 0);
+        _results.confidence.resize(numOutputs, 0);
+
+        std::span<Clause>       allClauses(_clauses);
+        for(int outputIdx = 0; outputIdx < numOutputs; outputIdx++)
+        {
+            int src = outputIdx * clausesPerOutput;
+            for (int clauseIdx = 0; clauseIdx < clausesPerOutput; clauseIdx++)
+            {
+                _clauses[src + clauseIdx]
+                        ._automataStates
+                        .resize(numInputs * 2, 0);
+            }
+            _outputs[outputIdx]._clauses = allClauses.subspan(src, clausesPerOutput);
+        }
+    }
+
+std::vector<int> 
+hardMax(TsetlinMachine::Prediction p)
 {
     float max_confidence = 0;
     int max_confidence_idx = 0;

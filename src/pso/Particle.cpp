@@ -8,10 +8,12 @@ void Particle::update(targetArgs gbPosition)
     float r2 = dist01(_rd);
     _velocity->s = _omega * _velocity->s
                    + r1 * _ego * (_pbPosition->s - _uniqueArgs.s)
-                   + r2 * _superEgo * (gbPosition.s - _uniqueArgs.s);
+                  // + r2 * _superEgo * (gbPosition.s - _uniqueArgs.s);
+                   + r1 * _superEgo * (gbPosition.s - _uniqueArgs.s);
     _velocity->T = _omega * _velocity->T
                    + r1 * _ego * (_pbPosition->T - _uniqueArgs.T)
-                   + r2 * _superEgo * (gbPosition.T - _uniqueArgs.T);
+                   //+ r2 * _superEgo * (gbPosition.T - _uniqueArgs.T);
+                   + r1 * _superEgo * (gbPosition.T - _uniqueArgs.T);
 
     _velocity->s = _velocity->s < _limits.vsMax ? _velocity->s : _limits.vsMax;
     _velocity->T = _velocity->T < _limits.vTMax ? _velocity->T : _limits.vTMax;
@@ -64,4 +66,6 @@ Particle::Particle(particleLimits limits, float omega, float egoFactor, float dt
         this->_evaluateJob = fun;
         this->_uniqueArgs = commonArgs;
         _uniqueArgs.s = distS(_rd);_uniqueArgs.T = distT(_rd);
+        std::cout<<"initialized particle arg.s = "<<_uniqueArgs.s<<", arg.T="<<_uniqueArgs.T
+        <<std::endl;
 }

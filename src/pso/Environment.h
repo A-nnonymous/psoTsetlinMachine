@@ -2,23 +2,14 @@
 #include <atomic>
 #include <iostream>
 #include <thread>
+#include <climits>
 #include "Particle.h"
-typedef struct sharedTargetArgs{
-    float      s;
-    int        T;
-    sharedTargetArgs(float sIn, int TIn)
-    {
-        s = sIn;
-        T = TIn;
-    };
-}sharedTargetArgs;
 
 class Environment{
 private:
     const particleLimits    _limits;
     const int               _particleNum;
     const int               _maxIter;
-    const int               _threadNum;
     const float             _convThreshold;
     float                   (*_evaluateFunc)(evaluateJobArgs);
     targetArgs              _gbPosition;
@@ -34,7 +25,7 @@ private:
 public:
     void                    optimize();
 
-    Environment(int particleNum, int iterNum, int threadNum,
+    Environment(int particleNum, int iterNum,
                 float egoFactor, float convThreshold, float omega, float dt,
                 particleLimits limits,
                 float evaluateFunc(evaluateJobArgs), evaluateJobArgs jobArgs);
