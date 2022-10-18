@@ -10,7 +10,7 @@ float concave(evaluateJobArgs pos)
 
 int main(int argc, char const *argv[])
 {
-    std::mt19937 rng(time(nullptr));
+    std::mt19937 rng(std::random_device{}());
     particleLimits limits(2.0,4,-1000,1000,-1000,1000);
     evaluateJobArgs dummy(1,1,1,1,rng);
 

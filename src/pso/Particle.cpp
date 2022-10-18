@@ -9,11 +9,11 @@ void Particle::update(targetArgs gbPosition)
     _velocity->s = _omega * _velocity->s
                    + r1 * _ego * (_pbPosition->s - _uniqueArgs.s)
                   // + r2 * _superEgo * (gbPosition.s - _uniqueArgs.s);
-                   + r1 * _superEgo * (gbPosition.s - _uniqueArgs.s);
+                   + r2 * _superEgo * (gbPosition.s - _uniqueArgs.s);
     _velocity->T = _omega * _velocity->T
                    + r1 * _ego * (_pbPosition->T - _uniqueArgs.T)
                    //+ r2 * _superEgo * (gbPosition.T - _uniqueArgs.T);
-                   + r1 * _superEgo * (gbPosition.T - _uniqueArgs.T);
+                   + r2 * _superEgo * (gbPosition.T - _uniqueArgs.T);
 
     _velocity->s = _velocity->s < _limits.vsMax ? _velocity->s : _limits.vsMax;
     _velocity->T = _velocity->T < _limits.vTMax ? _velocity->T : _limits.vTMax;
