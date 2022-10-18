@@ -87,6 +87,7 @@ void repetition(targetArgs bestArgs, evaluateJobArgs jobArgs)
     parse_huesken_scores("/home/data/siRNA/e2s/e2s_test_efficiency.csv", test_scores);
     std::vector<TsetlinMachine::Clause> bestPositiveClauses;
     std::vector<TsetlinMachine::Clause> bestNegativeClauses;
+    std::string outputpath = "/home/output/";
     
 
     TsetlinMachine  tm(input_size,clausePerOutput,output_size,bestArgs.s,bestArgs.T,rng);
@@ -130,7 +131,8 @@ void repetition(targetArgs bestArgs, evaluateJobArgs jobArgs)
                                     <<" \t\ttesting accuracy:"<< this_test_accuracy <<std::endl;
     }
     std::cout<<"BEST TEST ACCURACY: "<< best_test_accuracy <<std::endl;
-    modelOutput(tm,bestPositiveClauses,bestNegativeClauses,best_test_accuracy);
+    
+    modelOutput(tm,bestPositiveClauses,bestNegativeClauses,best_test_accuracy, outputpath);
 }
 
 int main(int argc, char const *argv[])
@@ -143,17 +145,17 @@ int main(int argc, char const *argv[])
     std::mt19937 rng(std::random_device{}());
 
     // PSO algorithm particle limit arguments.
-    float   sMin = 2.0f,    sMax = 40.0f;
+    float   sMin = 0.0f,    sMax = 40.0f;
     int     TMin = 0.5 * clausePerOutput;   // For aggressive feedback.
     int     TMax = 2.0 * clausePerOutput;   // For noise control.
     
     // PSO algorithm environment arguments.
     int             particleNum = 94;
     int             maxIter = 100;
-    float           egoFactor = 0.5f;       // C1 = egoFactor, C2 = 1/egoFactor.
+    float           egoFactor = 4.0f;       // C1 = egoFactor, C2 = 1/egoFactor.
     float           convThreshold = 0.002f;
-    float           omega = 0.6f;
-    float           dt = 0.1f;
+    float           omega = 0.9f;
+    float           dt = 0.001f;
 
     float           expectedNoiseRatio = 2; // Expected worst condition to get to optima.
     float           vTMax = (TMax - TMin) / expectedNoiseRatio;

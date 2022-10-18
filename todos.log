@@ -1,0 +1,6 @@
+0.Modify the PSO module and tsetlin machine to make it output model directly(generic programming?)
+1.Develop async update form of multithread PSO algorithm
+2.Use theories of information to interpret the model's output.
+3.Make PSO module more seperate.
+4.Add boost framework, random dropout to tsetlin machine to improve the performance.
+5.Write fine grained parallel learning function of tsetlin machine.

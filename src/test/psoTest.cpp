@@ -14,8 +14,8 @@ int main(int argc, char const *argv[])
     particleLimits limits(2.0,4,-1000,1000,-1000,1000);
     evaluateJobArgs dummy(1,1,1,1,rng);
 
-    Environment test(   40,1000,
-                        2.0f,0.01f,0.9f,0.001f,
+    Environment test(   90,1000,
+                        10.0f,0.01f,0.9f,0.0001f,
                         limits,
                         concave,dummy);
     test.optimize();
