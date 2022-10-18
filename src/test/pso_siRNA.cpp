@@ -150,14 +150,14 @@ int main(int argc, char const *argv[])
     // PSO algorithm environment arguments.
     int             particleNum = 94;
     int             maxIter = 100;
-    float           egoFactor = 2.0f;       // C1 = egoFactor, C2 = 1/egoFactor.
+    float           egoFactor = 0.5f;       // C1 = egoFactor, C2 = 1/egoFactor.
     float           convThreshold = 0.002f;
-    float           omega = 0.9f;
-    float           dt = 0.001f;
+    float           omega = 0.6f;
+    float           dt = 0.1f;
 
     float           expectedNoiseRatio = 2; // Expected worst condition to get to optima.
-    float           vTMax = (TMax - TMin) * (maxIter * dt ) / expectedNoiseRatio;
-    float           vsMax = (TMax - TMin) * (maxIter * dt ) / expectedNoiseRatio;
+    float           vTMax = (TMax - TMin) / expectedNoiseRatio;
+    float           vsMax = (TMax - TMin) / expectedNoiseRatio;
 
     particleLimits  argsLimit(   vTMax,  vsMax,
                             sMin,   sMax,
