@@ -2,11 +2,11 @@
 #include <chrono>
 void Environment::printBest()
 {
-    std::cout<<"\t+++++++++++++++++++++++++++++++++++++++"<<std::endl;
+    std::cout<<"\t+++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
     std::cout<<"\tBest argument 's' is optimized to: "<< _gbPosition.s<<std::endl;
     std::cout<<"\tBest argument 'T' is optimized to: "<< _gbPosition.T<<std::endl;
     std::cout<<"\tThis argument set has value of: "<<_gbValue<<std::endl;
-    std::cout<<"\t+++++++++++++++++++++++++++++++++++++++"<<std::endl;
+    std::cout<<"\t+++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
 }
 void Environment::exploitation()    // evaluate each position in multithread.
 {

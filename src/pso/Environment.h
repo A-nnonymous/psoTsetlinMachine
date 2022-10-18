@@ -12,10 +12,10 @@ private:
     const int               _maxIter;
     const float             _convThreshold;
     float                   (*_evaluateFunc)(evaluateJobArgs);
-    targetArgs              _gbPosition;
     float                   _gbValueLast;
     std::atomic<float>      _gbValue;
     std::vector<Particle>   _particles;
+    targetArgs              _gbPosition;
 
     void                    exploitation();           // Evaluate each particle`s position using self-defined function.
     bool                    judgeConverge();        // Judge if global best change no more than threshold.

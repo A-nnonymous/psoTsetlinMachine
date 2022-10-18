@@ -139,7 +139,7 @@ int main(int argc, char const *argv[])
 {
     // Tsetlin Machine common arguments.
     int     inputBitNum = 84;
-    int     clausePerOutput = 500;
+    int     clausePerOutput = 1000;
     int     outputBitNum = 4;
     int     epochNum = 100;
     std::mt19937 rng(std::random_device{}());
@@ -152,10 +152,10 @@ int main(int argc, char const *argv[])
     // PSO algorithm environment arguments.
     int             particleNum = 94;
     int             maxIter = 100;
-    float           egoFactor = 4.0f;       // C1 = egoFactor, C2 = 1/egoFactor.
+    float           egoFactor = 2.0f;       // C1 = egoFactor, C2 = 1/egoFactor.
     float           convThreshold = 0.002f;
     float           omega = 0.9f;
-    float           dt = 0.001f;
+    float           dt = 0.01f;
 
     float           expectedNoiseRatio = 2; // Expected worst condition to get to optima.
     float           vTMax = (TMax - TMin) / expectedNoiseRatio;
