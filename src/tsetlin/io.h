@@ -102,6 +102,7 @@ void
 modelOutput (TsetlinMachine tm,
              std::vector<TsetlinMachine::Clause> bestPositiveClauses,
              std::vector<TsetlinMachine::Clause> bestNegativeClauses,
-             float precision);
+             float precision,
+             std::string outputpath);
 
 

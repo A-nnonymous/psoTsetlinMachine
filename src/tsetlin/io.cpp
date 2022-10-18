@@ -175,7 +175,8 @@ void
 modelOutput (TsetlinMachine tm,
              std::vector<TsetlinMachine::Clause> bestPositiveClauses,
              std::vector<TsetlinMachine::Clause> bestNegativeClauses,
-             float precision)
+             float precision,
+             std::string outputpath)
 {
     int automataPerClause = bestPositiveClauses[0]._automataStates.size ();
     int *positive = (int *)malloc (bestPositiveClauses.size ()
@@ -216,7 +217,7 @@ modelOutput (TsetlinMachine tm,
         clauseIdx++;
     }
     write_csv<int> (positive, bestPositiveClauses.size (), automataPerClause,
-                    "./positive_" + std::to_string(precision));
+                    outputpath + "./positive_" + std::to_string(precision));
     write_csv<int> (negative, bestNegativeClauses.size (), automataPerClause,
-                    "./negative_" + std::to_string(precision));
+                    outputpath + "/negative_" + std::to_string(precision));
 }

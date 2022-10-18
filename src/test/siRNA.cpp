@@ -29,6 +29,7 @@ int main() {
     int                             output_size = 4;
     int                             input_size = input_bit_per_feature * input_features;
     int                             clausePerOutput = 500;
+    std::string                     outputpath = "/home/output";
 
     std::vector<std::vector<int>>   train_seqs(train_data_size, std::vector<int>(input_size, 0));
     std::vector<std::vector<int>>   train_scores(train_data_size, std::vector(output_size, 0));
@@ -100,7 +101,7 @@ int main() {
     }
     std::cout<<"BEST TEST ACCURACY: "<< best_test_accuracy <<std::endl;
 
-    modelOutput(tm,bestPositiveClauses,bestNegativeClauses,best_test_accuracy);
+    modelOutput(tm,bestPositiveClauses,bestNegativeClauses,best_test_accuracy, outputpath);
 
     
     return 0;
