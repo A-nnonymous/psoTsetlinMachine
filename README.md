@@ -11,4 +11,4 @@ The default setup of my machine is 96 cores with AVX-512F instruction set , so m
 
 ## **Notice:** There's some premature code in very early stage of this work, probably may take a lot of time to fix and rearrange the whole project, so I decide to reconstruct it in another work later and announce this repo deprecated.
 
-## [Further work](https://github.com/A-nnonymous/RSATsetlinMachine) may introduce AOA(Arithmetic Optimization Algorithm) to optimize tsetlin machine, with usage of modern threadpool and probably adding boosting & dropout to tsetlin machine algorithm itself.
+## [Further work](https://github.com/A-nnonymous/RSATsetlinMachine) may introduce RSA(Reptile Optimization Algorithm) to optimize tsetlin machine, with usage of modern threadpool and probably adding boosting & dropout to tsetlin machine algorithm itself.
